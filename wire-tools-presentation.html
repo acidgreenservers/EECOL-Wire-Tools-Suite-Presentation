@@ -1,0 +1,1758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EECOL Wire Tools Suite - Interactive Presentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="src/assets/css/eecol-theme.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Material Design 3 Color System */
+            --primary: #0058B3;
+            --primary-container: #D3E4FD;
+            --on-primary: #FFFFFF;
+            --on-primary-container: #001B3E;
+            --secondary: #565F71;
+            --secondary-container: #DAE2F9;
+            --tertiary: #705575;
+            --tertiary-container: #FBD7FC;
+            --error: #BA1A1A;
+            --error-container: #FFDAD6;
+            --surface: #FEFBFF;
+            --surface-variant: #DDE3EA;
+            --on-surface: #1A1C1E;
+            --on-surface-variant: #41484D;
+            --outline: #71787E;
+            --outline-variant: #C1C7CE;
+
+            /* Material Design 3 Elevation */
+            --elevation-0: 0px 0px 0px 0px rgba(0, 0, 0, 0.05);
+            --elevation-1: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+            --elevation-2: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 2px 6px 2px rgba(0, 0, 0, 0.15);
+            --elevation-3: 0px 1px 3px 0px rgba(0, 0, 0, 0.3), 0px 4px 8px 3px rgba(0, 0, 0, 0.15);
+            --elevation-4: 0px 2px 3px 0px rgba(0, 0, 0, 0.3), 0px 6px 10px 4px rgba(0, 0, 0, 0.15);
+            --elevation-5: 0px 4px 4px 0px rgba(0, 0, 0, 0.3), 0px 8px 12px 6px rgba(0, 0, 0, 0.15);
+
+            /* Dynamic theme colors per slide */
+            --theme-primary: var(--primary);
+            --theme-secondary: var(--secondary);
+            --theme-surface: var(--surface);
+            --theme-accent: #1976D2;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            color: var(--on-surface);
+        }
+
+        /* Animated background particles */
+        .background-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        .particle:nth-child(1) { width: 4px; height: 4px; top: 10%; left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { width: 6px; height: 6px; top: 20%; left: 80%; animation-delay: 2s; }
+        .particle:nth-child(3) { width: 3px; height: 3px; top: 60%; left: 30%; animation-delay: 4s; }
+        .particle:nth-child(4) { width: 5px; height: 5px; top: 80%; left: 70%; animation-delay: 6s; }
+        .particle:nth-child(5) { width: 4px; height: 4px; top: 40%; left: 50%; animation-delay: 8s; }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 0.1; }
+            50% { transform: translateY(-100px) rotate(180deg); opacity: 0.3; }
+            100% { transform: translateY(-200px) rotate(360deg); opacity: 0.1; }
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transform: translateX(100%) rotateY(45deg) scale(0.8);
+            transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            transform-style: preserve-3d;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0) rotateY(0deg) scale(1);
+            z-index: 10;
+        }
+
+        .slide.prev {
+            opacity: 0;
+            transform: translateX(-100%) rotateY(-45deg) scale(0.8);
+        }
+
+        .slide-content {
+            background: var(--surface);
+            border-radius: 28px;
+            box-shadow: var(--elevation-5);
+            max-width: 1400px;
+            width: 100%;
+            height: 88vh;
+            padding: 2rem;
+            overflow-y: auto;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--outline-variant);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            scrollbar-width: thin;
+            scrollbar-color: var(--outline-variant) transparent;
+        }
+
+        .slide-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .slide-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .slide-content::-webkit-scrollbar-thumb {
+            background: var(--outline-variant);
+            border-radius: 4px;
+        }
+
+        .slide-content::-webkit-scrollbar-thumb:hover {
+            background: var(--outline);
+        }
+
+        /* Material Design 3 Components */
+        .md-card {
+            background: var(--surface);
+            border-radius: 16px;
+            box-shadow: var(--elevation-1);
+            border: 1px solid var(--outline-variant);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            overflow: hidden;
+        }
+
+        .md-card:hover {
+            box-shadow: var(--elevation-3);
+            transform: translateY(-4px);
+        }
+
+        .md-button {
+            background: var(--primary);
+            color: var(--on-primary);
+            border: none;
+            border-radius: 100px;
+            padding: 12px 24px;
+            font-weight: 500;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: var(--elevation-1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .md-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .md-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .md-button:hover {
+            box-shadow: var(--elevation-2);
+            transform: translateY(-2px);
+        }
+
+        .md-fab {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--primary-container);
+            color: var(--on-primary-container);
+            border: none;
+            box-shadow: var(--elevation-3);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .md-fab:hover {
+            box-shadow: var(--elevation-4);
+            transform: scale(1.1);
+        }
+
+        .nav-button {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 100;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .nav-button.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .nav-prev {
+            left: 2rem;
+        }
+
+        .nav-next {
+            right: 2rem;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--theme-primary), var(--theme-accent));
+            transition: width 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--surface);
+            padding: 12px 24px;
+            border-radius: 100px;
+            font-weight: 500;
+            font-size: 16px;
+            color: var(--on-surface);
+            border: 1px solid var(--outline-variant);
+            z-index: 100;
+            box-shadow: var(--elevation-2);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .eecol-logo {
+            display: inline-block;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        h1 {
+            color: var(--theme-primary);
+            font-size: 3.5rem;
+            font-weight: 300;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+        }
+
+        h2 {
+            color: var(--on-surface);
+            font-size: 2.5rem;
+            font-weight: 400;
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+
+        h3 {
+            color: var(--on-surface);
+            font-size: 1.75rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: var(--surface);
+            border: 1px solid var(--outline-variant);
+            padding: 2rem;
+            border-radius: 16px;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: var(--elevation-1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--theme-primary), var(--theme-accent));
+        }
+
+        .feature-card:hover {
+            box-shadow: var(--elevation-3);
+            transform: translateY(-8px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--theme-primary);
+        }
+
+        .problem-box {
+            background: #FFF3E0;
+            border: 1px solid #FF9800;
+            border-left: 4px solid #FF9800;
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+            box-shadow: var(--elevation-1);
+        }
+
+        .solution-box {
+            background: #E8F5E8;
+            border: 1px solid #4CAF50;
+            border-left: 4px solid #4CAF50;
+            padding: 2rem;
+            border-radius: 16px;
+            margin: 2rem 0;
+            box-shadow: var(--elevation-1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--surface);
+            border-radius: 12px;
+            border: 1px solid var(--outline-variant);
+            box-shadow: var(--elevation-2);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .stat-card:hover {
+            box-shadow: var(--elevation-4);
+            transform: scale(1.02);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 500;
+            color: var(--theme-primary);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--on-surface-variant);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-description {
+            font-size: 0.8rem;
+            color: var(--on-surface);
+            line-height: 1.3;
+            font-weight: 400;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .bullet-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .bullet-list li {
+            padding: 0.75rem 0;
+            padding-left: 2.5rem;
+            position: relative;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .bullet-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            top: 0.75rem;
+            color: var(--theme-primary);
+            font-weight: 600;
+            font-size: 1.2rem;
+            width: 20px;
+            height: 20px;
+            background: var(--primary-container);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cta-button {
+            background: var(--primary);
+            color: var(--on-primary);
+            padding: 16px 32px;
+            border-radius: 100px;
+            border: none;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: var(--elevation-2);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            margin-top: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cta-button:hover {
+            box-shadow: var(--elevation-4);
+            transform: translateY(-2px);
+        }
+
+        .demo-container {
+            background: var(--surface);
+            border: 1px solid var(--outline-variant);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: var(--elevation-2);
+            overflow: hidden;
+        }
+
+        .demo-iframe {
+            width: 100%;
+            height: 800px;
+            border: none;
+            border-radius: 12px;
+            background: var(--surface);
+            box-shadow: var(--elevation-1);
+            transform: scale(1.0);
+            transform-origin: top center;
+        }
+
+        .demo-header {
+            background: linear-gradient(135deg, var(--theme-primary), var(--theme-accent));
+            color: white;
+            padding: 1.5rem 2rem;
+            border-radius: 16px 16px 0 0;
+            margin: -2rem -2rem 2rem -2rem;
+            font-weight: 500;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        /* Dynamic theme transitions */
+        .slide[data-theme="primary"] { --theme-primary: #0058B3; --theme-accent: #1976D2; }
+        .slide[data-theme="secondary"] { --theme-primary: #6750A4; --theme-accent: #7C4DFF; }
+        .slide[data-theme="tertiary"] { --theme-primary: #78536A; --theme-accent: #E91E63; }
+        .slide[data-theme="success"] { --theme-primary: #146C2E; --theme-accent: #4CAF50; }
+        .slide[data-theme="warning"] { --theme-primary: #7D5800; --theme-accent: #FF9800; }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .slide-content {
+                padding: 1.5rem;
+                height: 95vh;
+                border-radius: 20px;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            .nav-button {
+                width: 48px;
+                height: 48px;
+                font-size: 1.2rem;
+            }
+
+            .nav-prev {
+                left: 1rem;
+            }
+
+            .nav-next {
+                right: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .demo-iframe {
+                height: 400px;
+            }
+
+            .stat-card {
+                padding: 2rem;
+            }
+
+            .stat-number {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Loading animation */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-slide-in {
+            animation: slideInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* Keyboard hint */
+        .keyboard-hint {
+            position: fixed;
+            bottom: 5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            opacity: 0.7;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 16px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background Particles -->
+    <div class="background-particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="progress-bar" id="progressBar"></div>
+
+    <div class="presentation-container">
+        <!-- Slide 1: Title / Landing -->
+        <div class="slide active" data-slide="1" data-theme="primary">
+            <div class="slide-content">
+                <div class="text-center">
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="eecol-logo eecol-logo-tilt mx-auto">
+                        <circle cx="12" cy="12" r="11.35" fill="white" stroke="#0058B3" stroke-width="2"/>
+                        <rect x="4" y="4" width="4" height="16" rx="1" fill="#0058B3"/>
+                        <path d="M 8,6.5 C 12,5.5 16,7.5 20,6.5" stroke="#0058B3" stroke-width="3.5" stroke-linecap="round"/>
+                        <path d="M 8,12 C 12,11 16,13 20,12" stroke="#0058B3" stroke-width="3.5" stroke-linecap="round"/>
+                        <path d="M 8,17.5 C 12,16.5 16,18.5 20,17.5" stroke="#0058B3" stroke-width="3.5" stroke-linecap="round"/>
+                    </svg>
+                    <h1 class="mt-4">EECOL Wire Tools Suite</h1>
+                    <p class="text-2xl text-gray-700 mb-8">Transforming Wire Cutting Operations Through Digital Innovation</p>
+
+                    <div class="stats-grid animate-slide-in">
+                        <div class="stat-card">
+                            <div class="stat-number">12+</div>
+                            <div class="stat-label">🛠️ Specialized Tools</div>
+                            <div class="stat-description">Comprehensive suite covering all wire operations</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">100%</div>
+                            <div class="stat-label">📱 Offline-First</div>
+                            <div class="stat-description">Works without internet, no connectivity issues</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">0</div>
+                            <div class="stat-label">⚡ Installation Required</div>
+                            <div class="stat-description">Open in any browser, ready to use instantly</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">🎯</div>
+                            <div class="stat-label">Operator Reliability</div>
+                            <div class="stat-description">Ensures consistent accuracy in wire calculations</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">📊</div>
+                            <div class="stat-label">Accountability Records</div>
+                            <div class="stat-description">Complete audit trail of all cutting operations</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">💡</div>
+                            <div class="stat-label">Data-Driven Decisions</div>
+                            <div class="stat-description">Make informed choices based on real operational data</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">🔧</div>
+                            <div class="stat-label">Reduced Waste</div>
+                            <div class="stat-description">Minimize material loss through precise calculations</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">👁️</div>
+                            <div class="stat-label">Real-Time Visibility</div>
+                            <div class="stat-description">Monitor operations as they happen with optional backend database</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">📋</div>
+                            <div class="stat-label">Industry Compliance</div>
+                            <div class="stat-description">Meet regulatory standards with built-in protocols</div>
+                        </div>
+                    </div>
+
+                    <div class="mt-8">
+                        <p class="text-xl text-gray-600 text-center">
+                            A comprehensive tailored suite of tools made specifically for EECOL operations,<br>
+                            designed to eliminate operational inefficiencies for wire cutters during operations.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: The Problem -->
+        <div class="slide" data-slide="2" data-theme="warning">
+            <div class="slide-content">
+                <h2>The Challenge: AS400 System Limitations</h2>
+
+                <div class="problem-box">
+                    <h3>❌ Current Pain Points</h3>
+                    <ul class="bullet-list">
+                        <li>doesnt have in-built cutting history, manual operator memory reliance is faulty.</li>
+                        <li>doesnt allow attaching cutter names to cuts, trailing off no history.</li>
+                        <li>cutting records allows much more data to attach to records.</li>
+                        <li>records go to reports page for weekly/monthly output data.</li>
+                        <li>allows better operator accountability for keeping track of records.</li>
+                        <li>has mobile capabilities for logging cuts, ie can be kiosk for sales who cut and run back to counter.</li>
+                    </ul>
+                </div>
+
+                <div class="mt-8">
+                    <h3>Business Impact</h3>
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">⏱️</div>
+                            <h4 class="font-bold text-lg mb-2">Lost Productivity</h4>
+                            <p class="text-gray-700">Workers spend valuable time on manual calculations instead of cutting</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">💰</div>
+                            <h4 class="font-bold text-lg mb-2">Material Waste</h4>
+                            <p class="text-gray-700">Calculation errors result in incorrect cuts and wasted inventory</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">📊</div>
+                            <h4 class="font-bold text-lg mb-2">No Analytics</h4>
+                            <p class="text-gray-700">Missing insights prevent process optimization and forecasting</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: The Solution Overview -->
+        <div class="slide" data-slide="3">
+            <div class="slide-content">
+                <h2>The Solution: EECOL Wire Tools Suite</h2>
+
+                <div class="solution-box">
+                    <h3>✅ Digital-First Approach</h3>
+                    <p class="text-lg mb-4">A comprehensive suite of specialized tools designed to modernize every aspect of wire cutting operations</p>
+                </div>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🧮</div>
+                        <h4 class="font-bold text-lg mb-2">Smart Calculators</h4>
+                        <p class="text-gray-700">Precise wire mark calculations, reel estimators, and conversion tools</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h4 class="font-bold text-lg mb-2">Comprehensive Records</h4>
+                        <p class="text-gray-700">Track every cut, manage inventory, generate reports and analytics</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📈</div>
+                        <h4 class="font-bold text-lg mb-2">Advanced Planning</h4>
+                        <p class="text-gray-700">Multi-cut optimization, shipping manifests, and workflow tools</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔄</div>
+                        <h4 class="font-bold text-lg mb-2">P2P Sync</h4>
+                        <p class="text-gray-700">Real-time data synchronization across multiple workstations - optional p2p sync.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📱</div>
+                        <h4 class="font-bold text-lg mb-2">PWA Ready</h4>
+                        <p class="text-gray-700">Install on any device, works offline, no app store needed</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔒</div>
+                        <h4 class="font-bold text-lg mb-2">Privacy First</h4>
+                        <p class="text-gray-700">All data stored locally with optional encrypted sync</p>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-center">
+                    <p class="text-xl font-semibold text-gray-700">
+                        Built with modern web technologies • Zero installation • Enterprise-ready
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Wire Mark Calculator Info -->
+        <div class="slide" data-slide="4">
+            <div class="slide-content">
+                <h2>Tool #1: Wire Mark Calculator</h2>
+                <p class="text-lg text-gray-700 mb-6">Calculate the exact length between wire start and end marks with support for both metric and imperial units.</p>
+
+                <div class="feature-grid mb-6">
+                    <div class="feature-card">
+                        <h4 class="font-bold">⚡ Instant Calculation</h4>
+                        <p class="text-sm text-gray-700">Real-time results as you type with immediate feedback</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">🌍 Dual Units</h4>
+                        <p class="text-sm text-gray-700">Seamlessly switch between meters and feet</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">📋 Quick Copy</h4>
+                        <p class="text-sm text-gray-700">Copy results directly to clipboard for easy transfer</p>
+                    </div>
+                </div>
+
+                <div class="solution-box">
+                    <h3>🎯 Perfect For:</h3>
+                    <ul class="bullet-list">
+                        <li>Wire cutting operations requiring precise measurements</li>
+                        <li>Converting between metric and imperial measurements</li>
+                        <li>Quick calculations during production runs</li>
+                        <li>Ensuring accuracy in mark-to-mark cutting</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Wire Mark Calculator Demo -->
+        <div class="slide" data-slide="5">
+            <div class="slide-content">
+                <h2>Wire Mark Calculator - Live Demo</h2>
+                <p class="text-lg text-gray-700 mb-6">Try the calculator yourself - enter your measurements and see the results instantly.</p>
+
+                <div class="demo-container">
+                    <div class="demo-header">🎯 Interactive Demo - Calculate Wire Lengths</div>
+                    <iframe src="src/pages/wire-mark-calculator/wire-mark-calculator.html" class="demo-iframe" scrolling="yes"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Stop Mark Calculator Info -->
+        <div class="slide" data-slide="6">
+            <div class="slide-content">
+                <h2>Tool #2: Stop Mark Calculator</h2>
+                <p class="text-lg text-gray-700 mb-6">Calculate exact stopping points for precise wire cuts with advanced positioning algorithms.</p>
+
+                <div class="feature-grid mb-6">
+                    <div class="feature-card">
+                        <h4 class="font-bold">🎯 Precision Cutting</h4>
+                        <p class="text-sm text-gray-700">Calculate exact stop positions for wire cutting machines</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">⚙️ Machine Integration</h4>
+                        <p class="text-sm text-gray-700">Compatible with various cutting machine specifications</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">📏 Length Optimization</h4>
+                        <p class="text-sm text-gray-700">Minimize waste with optimal cutting sequences</p>
+                    </div>
+                </div>
+
+                <div class="solution-box">
+                    <h3>🎯 Perfect For:</h3>
+                    <ul class="bullet-list">
+                        <li>Automated wire cutting machines requiring precise stop points</li>
+                        <li>Batch processing with multiple cut lengths</li>
+                        <li>Quality control and precision manufacturing</li>
+                        <li>Reducing material waste through accurate calculations</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Stop Mark Calculator Demo -->
+        <div class="slide" data-slide="7">
+            <div class="slide-content">
+                <h2>Stop Mark Calculator - Live Demo</h2>
+                <p class="text-lg text-gray-700 mb-6">Calculate precise stopping points for your wire cutting operations.</p>
+
+                <div class="demo-container">
+                    <div class="demo-header">🎯 Interactive Demo - Calculate Stop Positions</div>
+                    <iframe src="src/pages/wire-stop-mark-calculator/wire-stop-mark-calculator.html" class="demo-iframe" scrolling="yes"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Reel Size Estimator Info -->
+        <div class="slide" data-slide="8">
+            <div class="slide-content">
+                <h2>Tool #3: Reel Size Estimator</h2>
+                <p class="text-lg text-gray-700 mb-6">Find the optimal reel size for your wire length using advanced engineering calculations and SVG visualizations.</p>
+
+                <div class="feature-grid mb-6">
+                    <div class="feature-card">
+                        <h4 class="font-bold">🎨 Visual Feedback</h4>
+                        <p class="text-sm text-gray-700">Interactive SVG reel diagrams with real-time updates</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">⚙️ Engineering Grade</h4>
+                        <p class="text-sm text-gray-700">D/d ratio validation and freeboard calculations</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">📐 Standard Reels</h4>
+                        <p class="text-sm text-gray-700">Pre-configured industry standard reel sizes</p>
+                    </div>
+                </div>
+
+                <div class="solution-box">
+                    <h3>🎯 Perfect For:</h3>
+                    <ul class="bullet-list">
+                        <li>Determining optimal reel sizes for wire spooling</li>
+                        <li>Engineering calculations for wire packing density</li>
+                        <li>Inventory planning and space optimization</li>
+                        <li>Quality control for reel specifications</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Reel Size Estimator Demo -->
+        <div class="slide" data-slide="9">
+            <div class="slide-content">
+                <h2>Reel Size Estimator - Live Demo</h2>
+                <p class="text-lg text-gray-700 mb-6">Watch the reel visualization update as you adjust parameters and find the perfect reel size.</p>
+
+                <div class="demo-container">
+                    <div class="demo-header">🎯 Interactive Demo - Visualize Reel Capacity</div>
+                    <iframe src="src/pages/reel-size-estimator/reel-size-estimator.html" class="demo-iframe" scrolling="yes"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Wire Cut Records Info -->
+        <div class="slide" data-slide="10">
+            <div class="slide-content">
+                <h2>Tool #4: Wire Cut Records</h2>
+                <p class="text-lg text-gray-700 mb-6">Log, track, and analyze every wire cut with comprehensive data management and reporting capabilities.</p>
+
+                <div class="feature-grid mb-6">
+                    <div class="feature-card">
+                        <h4 class="font-bold">📝 Quick Logging</h4>
+                        <p class="text-sm text-gray-700">Fast data entry designed for floor workers</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">🔍 Advanced Search</h4>
+                        <p class="text-sm text-gray-700">Filter by date, job number, wire type, and operator</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">📊 Analytics Dashboard</h4>
+                        <p class="text-sm text-gray-700">Visual charts and performance metrics</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">💾 Export & Reporting</h4>
+                        <p class="text-sm text-gray-700">CSV export and automated report generation</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">🔄 P2P Synchronization</h4>
+                        <p class="text-sm text-gray-700">Real-time data sharing across workstations</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">📱 Mobile Optimized</h4>
+                        <p class="text-sm text-gray-700">Works perfectly on tablets and phones</p>
+                    </div>
+                </div>
+
+                <div class="solution-box">
+                    <h3>🎯 Perfect For:</h3>
+                    <ul class="bullet-list">
+                        <li>Complete traceability of all wire cutting operations</li>
+                        <li>Performance monitoring and efficiency analysis</li>
+                        <li>Quality control and compliance documentation</li>
+                        <li>Inventory management and material tracking</li>
+                        <li>Historical data analysis for process optimization</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: Wire Cut Records Demo -->
+        <div class="slide" data-slide="11">
+            <div class="slide-content">
+                <h2>Wire Cut Records - Live Demo</h2>
+                <p class="text-lg text-gray-700 mb-6">Experience the full data management system - log cuts, search records, and view analytics.</p>
+
+                <div class="demo-container">
+                    <div class="demo-header">🎯 Interactive Demo - Complete Data Management System</div>
+                    <iframe src="src/pages/cutting-records/cutting-records.html" class="demo-iframe" scrolling="yes"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Reel Capacity Estimator Info -->
+        <div class="slide" data-slide="12">
+            <div class="slide-content">
+                <h2>Tool #5: Reel Capacity Estimator</h2>
+                <p class="text-lg text-gray-700 mb-6">Calculate the maximum wire length that can fit on any reel size with engineering precision and real-time feedback.</p>
+
+                <div class="feature-grid mb-6">
+                    <div class="feature-card">
+                        <h4 class="font-bold">📏 Capacity Calculation</h4>
+                        <p class="text-sm text-gray-700">Determine maximum wire length for any reel diameter and wire gauge</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">⚙️ Engineering Standards</h4>
+                        <p class="text-sm text-gray-700">Industry-standard calculations with safety margins</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">📊 Real-time Results</h4>
+                        <p class="text-sm text-gray-700">Instant calculations as you adjust parameters</p>
+                    </div>
+                </div>
+
+                <div class="solution-box">
+                    <h3>🎯 Perfect For:</h3>
+                    <ul class="bullet-list">
+                        <li>Planning wire spooling operations for large projects</li>
+                        <li>Optimizing reel selection for cost efficiency</li>
+                        <li>Ensuring reels are neither under-filled nor over-filled</li>
+                        <li>Engineering calculations for wire packing density</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Reel Capacity Estimator Demo -->
+        <div class="slide" data-slide="13">
+            <div class="slide-content">
+                <h2>Reel Capacity Estimator - Live Demo</h2>
+                <p class="text-lg text-gray-700 mb-6">Calculate how much wire can fit on any reel size - adjust parameters and see results instantly.</p>
+
+                <div class="demo-container">
+                    <div class="demo-header">🎯 Interactive Demo - Calculate Reel Capacity</div>
+                    <iframe src="src/pages/reel-capacity-estimator/reel-capacity-estimator.html" class="demo-iframe" scrolling="yes"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 14: Inventory Records Info -->
+        <div class="slide" data-slide="14">
+            <div class="slide-content">
+                <h2>Tool #6: Inventory Records</h2>
+                <p class="text-lg text-gray-700 mb-6">Track wire inventory in real-time with comprehensive stock management, usage analytics, and automated reporting.</p>
+
+                <div class="feature-grid mb-6">
+                    <div class="feature-card">
+                        <h4 class="font-bold">📦 Stock Tracking</h4>
+                        <p class="text-sm text-gray-700">Monitor wire inventory levels across all locations</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">📊 Usage Analytics</h4>
+                        <p class="text-sm text-gray-700">Track consumption patterns and forecast needs</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">🔄 Auto Updates</h4>
+                        <p class="text-sm text-gray-700">Sync with cutting records for automatic inventory updates</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">📋 Low Stock Alerts</h4>
+                        <p class="text-sm text-gray-700">Automated notifications for reordering</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">💾 Export Reports</h4>
+                        <p class="text-sm text-gray-700">Generate inventory reports and export data</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">🔗 P2P Sync</h4>
+                        <p class="text-sm text-gray-700">Real-time inventory sharing across workstations</p>
+                    </div>
+                </div>
+
+                <div class="solution-box">
+                    <h3>🎯 Perfect For:</h3>
+                    <ul class="bullet-list">
+                        <li>Real-time visibility into wire stock levels</li>
+                        <li>Preventing stockouts during production runs</li>
+                        <li>Optimizing inventory carrying costs</li>
+                        <li>Compliance documentation and audit trails</li>
+                        <li>Demand forecasting and procurement planning</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: Inventory Records Demo -->
+        <div class="slide" data-slide="15">
+            <div class="slide-content">
+                <h2>Inventory Records - Live Demo</h2>
+                <p class="text-lg text-gray-700 mb-6">Manage your wire inventory - track stock levels, monitor usage, and generate reports.</p>
+
+                <div class="demo-container">
+                    <div class="demo-header">🎯 Interactive Demo - Complete Inventory Management</div>
+                    <iframe src="src/pages/inventory-records/inventory-records.html" class="demo-iframe" scrolling="yes"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 16: Machine Maintenance Checklist Info -->
+        <div class="slide" data-slide="16">
+            <div class="slide-content">
+                <h2>Tool #7: Machine Maintenance Checklist</h2>
+                <p class="text-lg text-gray-700 mb-6">Ensure equipment reliability with comprehensive daily maintenance checklists and inspection protocols.</p>
+
+                <div class="feature-grid mb-6">
+                    <div class="feature-card">
+                        <h4 class="font-bold">🔧 Daily Inspections</h4>
+                        <p class="text-sm text-gray-700">Structured checklists for wire cutting equipment</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">📝 Digital Records</h4>
+                        <p class="text-sm text-gray-700">Electronic maintenance logs with timestamps</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">⚠️ Issue Tracking</h4>
+                        <p class="text-sm text-gray-700">Log maintenance issues and track resolutions</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">📊 Compliance Reports</h4>
+                        <p class="text-sm text-gray-700">Generate maintenance compliance documentation</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">🔔 Automated Reminders</h4>
+                        <p class="text-sm text-gray-700">Scheduled maintenance notifications</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">📱 Mobile Access</h4>
+                        <p class="text-sm text-gray-700">Complete checklists on tablets and phones</p>
+                    </div>
+                </div>
+
+                <div class="solution-box">
+                    <h3>🎯 Perfect For:</h3>
+                    <ul class="bullet-list">
+                        <li>Preventive maintenance scheduling and tracking</li>
+                        <li>Equipment reliability and uptime optimization</li>
+                        <li>Safety compliance and inspection documentation</li>
+                        <li>Maintenance cost tracking and analysis</li>
+                        <li>Standardized maintenance procedures</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 17: Machine Maintenance Checklist Demo -->
+        <div class="slide" data-slide="17">
+            <div class="slide-content">
+                <h2>Machine Maintenance Checklist - Live Demo</h2>
+                <p class="text-lg text-gray-700 mb-6">Complete daily maintenance inspections and track equipment health.</p>
+
+                <div class="demo-container">
+                    <div class="demo-header">🎯 Interactive Demo - Equipment Maintenance Tracking</div>
+                    <iframe src="src/pages/machine-maintenance-checklist/machine-maintenance-checklist.html" class="demo-iframe" scrolling="yes"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 18: Changelog Info -->
+        <div class="slide" data-slide="18">
+            <div class="slide-content">
+                <h2>Tool #8: Changelog</h2>
+                <p class="text-lg text-gray-700 mb-6">Stay updated with the latest features, improvements, and bug fixes in the EECOL Wire Tools Suite.</p>
+
+                <div class="feature-grid mb-6">
+                    <div class="feature-card">
+                        <h4 class="font-bold">📈 Version History</h4>
+                        <p class="text-sm text-gray-700">Complete record of all updates and enhancements</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">🐛 Bug Fixes</h4>
+                        <p class="text-sm text-gray-700">Track resolved issues and improvements</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">✨ New Features</h4>
+                        <p class="text-sm text-gray-700">Discover latest tool additions and capabilities</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">🔄 Release Notes</h4>
+                        <p class="text-sm text-gray-700">Detailed information about each version</p>
+                    </div>
+                </div>
+
+                <div class="solution-box">
+                    <h3>🎯 Perfect For:</h3>
+                    <ul class="bullet-list">
+                        <li>Understanding new features and capabilities</li>
+                        <li>Tracking software improvements over time</li>
+                        <li>Planning upgrades and feature adoption</li>
+                        <li>Technical support and troubleshooting reference</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 19: Changelog Demo -->
+        <div class="slide" data-slide="19">
+            <div class="slide-content">
+                <h2>Changelog - Live Demo</h2>
+                <p class="text-lg text-gray-700 mb-6">Review the latest updates and improvements to the EECOL Wire Tools Suite.</p>
+
+                <div class="demo-container">
+                    <div class="demo-header">🎯 Interactive Demo - Version History & Updates</div>
+                    <iframe src="src/pages/changelog/changelog.html" class="demo-iframe" scrolling="yes"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 20: Changelog Older Info -->
+        <div class="slide" data-slide="20">
+            <div class="slide-content">
+                <h2>Tool #9: Changelog (Archive)</h2>
+                <p class="text-lg text-gray-700 mb-6">Access the complete historical record of all changes and updates from previous versions.</p>
+
+                <div class="feature-grid mb-6">
+                    <div class="feature-card">
+                        <h4 class="font-bold">📚 Complete History</h4>
+                        <p class="text-sm text-gray-700">Full archive of all past updates and changes</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">🔍 Search & Filter</h4>
+                        <p class="text-sm text-gray-700">Find specific updates by version or feature</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">📖 Detailed Records</h4>
+                        <p class="text-sm text-gray-700">Comprehensive documentation of all changes</p>
+                    </div>
+                </div>
+
+                <div class="solution-box">
+                    <h3>🎯 Perfect For:</h3>
+                    <ul class="bullet-list">
+                        <li>Researching when specific features were added</li>
+                        <li>Understanding the evolution of the tool suite</li>
+                        <li>Historical reference for development decisions</li>
+                        <li>Complete audit trail of software changes</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 21: Changelog Older Demo -->
+        <div class="slide" data-slide="21">
+            <div class="slide-content">
+                <h2>Changelog Archive - Live Demo</h2>
+                <p class="text-lg text-gray-700 mb-6">Explore the complete history of updates and changes to the EECOL Wire Tools Suite.</p>
+
+                <div class="demo-container">
+                    <div class="demo-header">🎯 Interactive Demo - Complete Version Archive</div>
+                    <iframe src="src/pages/changelog-older/changelog-older.html" class="demo-iframe" scrolling="yes"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 22: Advanced Calculators -->
+        <div class="slide" data-slide="22">
+            <div class="slide-content">
+                <h2>Advanced Calculators</h2>
+                <p class="text-lg text-gray-700 mb-4">Specialized calculation tools for complex wire operations and engineering requirements.</p>
+
+                <div class="feature-grid mb-6">
+                    <div class="feature-card">
+                        <h4 class="font-bold">⏹️ Stop Mark Calculator</h4>
+                        <p class="text-sm text-gray-700">Calculate exact stopping points for precise cuts</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">⚖️ Weight Calculator</h4>
+                        <p class="text-sm text-gray-700">Estimate wire weight by length and material</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">✂️ Multi-Cut Planner</h4>
+                        <p class="text-sm text-gray-700">Optimize large reel portioning strategies</p>
+                    </div>
+                </div>
+
+                <div class="solution-box mb-6">
+                    <h3>🔧 Engineering-Grade Precision</h3>
+                    <ul class="bullet-list">
+                        <li>Advanced mathematical models for wire behavior</li>
+                        <li>Material-specific calculations and corrections</li>
+                        <li>Real-time validation and error checking</li>
+                        <li>Integration with cutting records for accuracy verification</li>
+                    </ul>
+                </div>
+
+                <div class="text-center">
+                    <p class="text-lg font-semibold text-gray-700">
+                        Specialized tools for complex wire operations
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 23: Data Management Tools -->
+        <div class="slide" data-slide="23">
+            <div class="slide-content">
+                <h2>Data Management & Analytics</h2>
+                <p class="text-lg text-gray-700 mb-4">Comprehensive data tracking, inventory management, and operational analytics for wire operations.</p>
+
+                <div class="feature-grid mb-6">
+                    <div class="feature-card">
+                        <h4 class="font-bold">📦 Inventory Records</h4>
+                        <p class="text-sm text-gray-700">Real-time wire inventory tracking and management</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">📈 Advanced Analytics</h4>
+                        <p class="text-sm text-gray-700">Usage patterns, efficiency metrics, and reporting</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">🔄 P2P Synchronization</h4>
+                        <p class="text-sm text-gray-700">Real-time data sharing across workstations</p>
+                    </div>
+                </div>
+
+                <div class="solution-box mb-6">
+                    <h3>📈 Operational Intelligence</h3>
+                    <ul class="bullet-list">
+                        <li>Historical data analysis for process optimization</li>
+                        <li>Automated reporting and KPI tracking</li>
+                        <li>Predictive analytics for inventory planning</li>
+                        <li>Real-time dashboards for operational visibility</li>
+                    </ul>
+                </div>
+
+                <div class="text-center">
+                    <p class="text-lg font-semibold text-gray-700">
+                        Transform data into actionable business intelligence
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 24: Specialized Operations Tools -->
+        <div class="slide" data-slide="24">
+            <div class="slide-content">
+                <h2>Specialized Operations Tools</h2>
+                <p class="text-lg text-gray-700 mb-4">Purpose-built tools for shipping, labeling, maintenance, and operational excellence.</p>
+
+                <div class="feature-grid mb-6">
+                    <div class="feature-card">
+                        <h4 class="font-bold">📋 Shipping Manifest</h4>
+                        <p class="text-sm text-gray-700">Generate professional shipping labels and manifests</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">🏷️ Reel Labels</h4>
+                        <p class="text-sm text-gray-700">Print large-format identification labels</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold">🔧 Maintenance Tracker</h4>
+                        <p class="text-sm text-gray-700">Daily equipment inspection and maintenance checklists</p>
+                    </div>
+                </div>
+
+                <div class="solution-box mb-6">
+                    <h3>⚙️ Operational Excellence</h3>
+                    <ul class="bullet-list">
+                        <li>Standardized shipping and labeling procedures</li>
+                        <li>Preventive maintenance scheduling and tracking</li>
+                        <li>Quality control and compliance documentation</li>
+                        <li>Integrated workflow management</li>
+                    </ul>
+                </div>
+
+                <div class="text-center">
+                    <p class="text-lg font-semibold text-gray-700">
+                        Complete operational toolkit for professional wire operations
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 25: Architecture & Technology -->
+        <div class="slide" data-slide="25">
+            <div class="slide-content">
+                <h2>Architecture & Technology Stack</h2>
+
+                <div class="feature-grid mb-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">🗄️</div>
+                        <h4 class="font-bold text-lg mb-2">IndexedDB</h4>
+                        <p class="text-gray-700">Local-first data storage with unlimited capacity</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔄</div>
+                        <h4 class="font-bold text-lg mb-2">GunDB P2P</h4>
+                        <p class="text-gray-700">Real-time distributed sync without central server</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📱</div>
+                        <h4 class="font-bold text-lg mb-2">PWA</h4>
+                        <p class="text-gray-700">Progressive Web App with offline support</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎨</div>
+                        <h4 class="font-bold text-lg mb-2">Tailwind CSS</h4>
+                        <p class="text-gray-700">Modern, responsive, accessible UI design</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h4 class="font-bold text-lg mb-2">Zero Build</h4>
+                        <p class="text-gray-700">No compilation required - pure web standards</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔒</div>
+                        <h4 class="font-bold text-lg mb-2">Security</h4>
+                        <p class="text-gray-700">Content Security Policy, encrypted sync optional</p>
+                    </div>
+                </div>
+
+                <div class="solution-box">
+                    <h3>🏗️ Deployment Options</h3>
+                    <ul class="bullet-list">
+                        <li>Static file hosting (no server required)</li>
+                        <li>Works on any modern browser (Chrome, Firefox, Edge, Safari)</li>
+                        <li>Can be deployed on internal network without internet access</li>
+                        <li>Optional cloud relay for remote sync</li>
+                        <li>GDPR compliant - data stays on-premises</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 26: Complete Tool Suite -->
+        <div class="slide" data-slide="26">
+            <div class="slide-content">
+                <h2>Complete Tool Suite</h2>
+                <p class="text-lg text-gray-700 mb-6">12+ specialized tools covering every aspect of wire operations</p>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">📏</div>
+                        <h4 class="font-bold">Wire Mark Calculator</h4>
+                        <p class="text-sm text-gray-700">Calculate length between wire marks</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⏹️</div>
+                        <h4 class="font-bold">Stop Mark Calculator</h4>
+                        <p class="text-sm text-gray-700">Determine exact stopping points</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔄</div>
+                        <h4 class="font-bold">Reel Capacity Estimator</h4>
+                        <p class="text-sm text-gray-700">Calculate maximum wire capacity</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📐</div>
+                        <h4 class="font-bold">Reel Size Estimator</h4>
+                        <p class="text-sm text-gray-700">Find optimal reel for wire length</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⚖️</div>
+                        <h4 class="font-bold">Weight Calculator</h4>
+                        <p class="text-sm text-gray-700">Estimate wire weight by length</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">✂️</div>
+                        <h4 class="font-bold">Multi-Cut Planner</h4>
+                        <p class="text-sm text-gray-700">Optimize large reel portioning</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h4 class="font-bold">Wire Cut Records</h4>
+                        <p class="text-sm text-gray-700">Log and analyze cutting operations</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📦</div>
+                        <h4 class="font-bold">Inventory Records</h4>
+                        <p class="text-sm text-gray-700">Track wire inventory in real-time</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📋</div>
+                        <h4 class="font-bold">Shipping Manifest</h4>
+                        <p class="text-sm text-gray-700">Generate shipping labels</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🏷️</div>
+                        <h4 class="font-bold">Reel Labels</h4>
+                        <p class="text-sm text-gray-700">Print large-format identification</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🔧</div>
+                        <h4 class="font-bold">Machine Maintenance</h4>
+                        <p class="text-sm text-gray-700">Daily equipment checklists</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎓</div>
+                        <h4 class="font-bold">Education Center</h4>
+                        <p class="text-sm text-gray-700">Training and best practices</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 27: Benefits & ROI -->
+        <div class="slide" data-slide="27">
+            <div class="slide-content">
+                <h2>Expected Benefits & ROI</h2>
+
+                <div class="stats-grid mb-6">
+                    <div class="stat-card">
+                        <div class="stat-number">-70%</div>
+                        <div class="stat-label">Calculation Time</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">-50%</div>
+                        <div class="stat-label">Data Entry Errors</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">+100%</div>
+                        <div class="stat-label">Operational Visibility</div>
+                    </div>
+                </div>
+
+                <div class="solution-box mb-6">
+                    <h3>💡 Key Advantages</h3>
+                    <ul class="bullet-list">
+                        <li>Reduce material waste through precise calculations</li>
+                        <li>Eliminate manual calculation errors</li>
+                        <li>Real-time inventory visibility</li>
+                        <li>Historical data for optimization</li>
+                        <li>Mobile accessibility for floor workers</li>
+                        <li>Standardized cutting protocols</li>
+                    </ul>
+                </div>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg mb-2">⚡ Faster Operations</h4>
+                        <p class="text-gray-700">Workers spend more time cutting, less time calculating</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg mb-2">📊 Data-Driven</h4>
+                        <p class="text-gray-700">Make informed decisions based on actual usage patterns</p>
+                    </div>
+                    <div class="feature-card">
+                        <h4 class="font-bold text-lg mb-2">🎯 Accuracy</h4>
+                        <p class="text-gray-700">Engineering-grade calculations ensure precision</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 28: Implementation Roadmap -->
+        <div class="slide" data-slide="28">
+            <div class="slide-content">
+                <h2>Implementation Roadmap</h2>
+
+                <div class="space-y-6 mt-8">
+                    <div class="feature-card">
+                        <h3 class="text-xl font-bold mb-3">Phase 1: Pilot Deployment (Week 1-2)</h3>
+                        <ul class="bullet-list">
+                            <li>Deploy to single workstation for testing</li>
+                            <li>Train 2-3 key users on core tools</li>
+                            <li>Gather feedback and refine workflows</li>
+                            <li>Validate data accuracy against AS400</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3 class="text-xl font-bold mb-3">Phase 2: Team Rollout (Week 3-4)</h3>
+                        <ul class="bullet-list">
+                            <li>Install PWA on all workstations and mobile devices</li>
+                            <li>Comprehensive training for all wire cutting staff</li>
+                            <li>Set up P2P sync relay if needed</li>
+                            <li>Establish data backup procedures</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3 class="text-xl font-bold mb-3">Phase 3: Optimization (Week 5-8)</h3>
+                        <ul class="bullet-list">
+                            <li>Analyze usage data and identify bottlenecks</li>
+                            <li>Implement custom features based on feedback</li>
+                            <li>Integrate with existing reporting systems</li>
+                            <li>Establish KPIs and monitoring</li>
+                        </ul>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3 class="text-xl font-bold mb-3">Phase 4: Expansion (Month 3+)</h3>
+                        <ul class="bullet-list">
+                            <li>Roll out to additional departments or locations</li>
+                            <li>Develop custom integrations if needed</li>
+                            <li>Continuous improvement based on usage analytics</li>
+                            <li>Explore automation opportunities</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 29: Next Steps / Call to Action -->
+        <div class="slide" data-slide="29">
+            <div class="slide-content">
+                <div class="text-center">
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="eecol-logo mx-auto">
+                        <circle cx="12" cy="12" r="11.35" fill="white" stroke="#0058B3" stroke-width="2"/>
+                        <rect x="4" y="4" width="4" height="16" rx="1" fill="#0058B3"/>
+                        <path d="M 8,6.5 C 12,5.5 16,7.5 20,6.5" stroke="#0058B3" stroke-width="3.5" stroke-linecap="round"/>
+                        <path d="M 8,12 C 12,11 16,13 20,12" stroke="#0058B3" stroke-width="3.5" stroke-linecap="round"/>
+                        <path d="M 8,17.5 C 12,16.5 16,18.5 20,17.5" stroke="#0058B3" stroke-width="3.5" stroke-linecap="round"/>
+                    </svg>
+                    <h1 class="mt-4">Ready to Transform Your Operations?</h1>
+                    <p class="text-2xl text-gray-700 mb-8">Let's discuss implementation next steps</p>
+
+                    <div class="solution-box text-left max-w-3xl mx-auto">
+                        <h3>📋 What Happens Next</h3>
+                        <ul class="bullet-list">
+                            <li>Schedule a hands-on demo session with your team</li>
+                            <li>Identify pilot workstation and key users</li>
+                            <li>Discuss customization requirements</li>
+                            <li>Plan deployment timeline</li>
+                            <li>Set success metrics and KPIs</li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-8">
+                        <a href="https://wire-tools.pages.dev" target="_blank" class="cta-button">
+                            🚀 Open Full Tool Suite
+                        </a>
+                    </div>
+
+                    <div class="mt-8 p-6 bg-gray-50 rounded-xl">
+                        <h3 class="font-bold text-xl mb-4">Contact Information</h3>
+                        <p class="text-lg text-gray-700">
+                            <strong>Developer:</strong> Lucas (with Claude AI Assistant 🤖)<br>
+                            <strong>Version:</strong> v0.8.0.1 - Enterprise Edition<br>
+                            <strong>Built with:</strong> ❤️ for EECOL Wire Operations
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Controls -->
+    <button class="md-fab nav-prev" id="prevBtn" onclick="previousSlide()">
+        <span style="font-size: 24px; line-height: 1;">←</span>
+    </button>
+    <button class="md-fab nav-next" id="nextBtn" onclick="nextSlide()">
+        <span style="font-size: 24px; line-height: 1;">→</span>
+    </button>
+
+    <!-- Slide Counter -->
+    <div class="slide-counter">
+        <span id="currentSlide">1</span> / <span id="totalSlides">29</span>
+    </div>
+
+    <!-- Keyboard Hint -->
+    <div class="keyboard-hint">
+        Use arrow keys or click buttons to navigate
+    </div>
+
+    <script>
+        let currentSlideIndex = 1;
+        const totalSlides = document.querySelectorAll('.slide').length;
+
+        // Update total slides counter
+        document.getElementById('totalSlides').textContent = totalSlides;
+
+        function updateSlide() {
+            // Remove active and prev classes from all slides
+            document.querySelectorAll('.slide').forEach(slide => {
+                slide.classList.remove('active', 'prev');
+            });
+
+            // Add active class to current slide
+            const currentSlide = document.querySelector(`[data-slide="${currentSlideIndex}"]`);
+            currentSlide.classList.add('active');
+
+            // Apply slide-in animation to content
+            const slideContent = currentSlide.querySelector('.slide-content');
+            if (slideContent) {
+                slideContent.classList.remove('animate-slide-in');
+                setTimeout(() => {
+                    slideContent.classList.add('animate-slide-in');
+                }, 100);
+            }
+
+            // Update counter
+            document.getElementById('currentSlide').textContent = currentSlideIndex;
+
+            // Update progress bar
+            const progress = (currentSlideIndex / totalSlides) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+
+            // Update navigation buttons
+            document.getElementById('prevBtn').classList.toggle('disabled', currentSlideIndex === 1);
+            document.getElementById('nextBtn').classList.toggle('disabled', currentSlideIndex === totalSlides);
+
+            // Reload iframe on slide with demo to ensure it's fresh
+            const iframe = currentSlide.querySelector('.demo-iframe');
+            if (iframe && iframe.src) {
+                // Force reload by reassigning src
+                const src = iframe.src;
+                iframe.src = '';
+                setTimeout(() => { iframe.src = src; }, 100);
+            }
+        }
+
+        function nextSlide() {
+            if (currentSlideIndex < totalSlides) {
+                document.querySelector(`[data-slide="${currentSlideIndex}"]`).classList.add('prev');
+                currentSlideIndex++;
+                updateSlide();
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlideIndex > 1) {
+                currentSlideIndex--;
+                updateSlide();
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                nextSlide();
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                previousSlide();
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                currentSlideIndex = 1;
+                updateSlide();
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                currentSlideIndex = totalSlides;
+                updateSlide();
+            }
+        });
+
+        // Initialize
+        updateSlide();
+
+        // Handle window resize
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                updateSlide();
+            }, 250);
+        });
+
+        // Prevent iframe clicks from interfering with navigation
+        document.querySelectorAll('.demo-iframe').forEach(iframe => {
+            iframe.addEventListener('load', () => {
+                try {
+                    // This will only work if iframe is same-origin
+                    iframe.contentWindow.addEventListener('keydown', (e) => {
+                        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+                            e.stopPropagation();
+                        }
+                    });
+                } catch (e) {
+                    // Cross-origin iframe, can't attach event listener
+                    console.log('Cross-origin iframe detected');
+                }
+            });
+        });
+
+        console.log('🎉 EECOL Wire Tools Suite Presentation Loaded!');
+        console.log('📊 Total Slides:', totalSlides);
+        console.log('⌨️  Keyboard shortcuts: ← → (arrows), Home, End, Space');
+    </script>
+</body>
+</html>

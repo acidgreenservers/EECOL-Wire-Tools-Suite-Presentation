@@ -38,7 +38,7 @@ globs: ["*.html", "src/**/*"]
 ```
 presentation-tools/
 ├── index.html                    # Hero page with presentation links
-├── wire-tools-presentation.html  # Single-page presentation (19 slides)
+├── wire-tools-presentation.html  # Single-page presentation (29 slides)
 ├── ai-context/                   # Documentation and memory bank
 │   └── memory-bank/             # Project documentation
 └── src/
@@ -49,7 +49,7 @@ presentation-tools/
     └── pages/                   # Individual tool pages
         ├── wire-mark-calculator/
         ├── cutting-records/
-        └── ...                  # 9+ tool directories
+        └── ...                  # 12+ tool directories
 ```
 
 ### Target Project Structure (Multi-Page)
@@ -72,7 +72,7 @@ presentation-tools/
         ├── slides/              # NEW: Individual slide pages
         │   ├── 1/index.html
         │   ├── 2/index.html
-        │   └── ...              # 19 slide directories
+        │   └── ...              # 29 slide directories
         └── tools/               # Existing tool pages
             ├── wire-mark-calculator/
             └── ...

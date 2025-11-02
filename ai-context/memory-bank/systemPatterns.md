@@ -27,7 +27,7 @@ globs: ["*.html", "src/**/*"]
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
 │   Hero Page     │───▶│  Slide Pages     │───▶│ Direct Tool      │
-│   (index.html)  │    │  (1-19 pages)    │    │ Integration      │
+│   (index.html)  │    │  (1-29 pages)    │    │ Integration      │
 └─────────────────┘    └──────────────────┘    └─────────────────┘
          │                       │                       │
          ▼                       ▼                       ▼
@@ -67,30 +67,37 @@ graph TD
 
 ## Key Technical Decisions
 
-### 1. Single-Page to Multi-Page Transition
+### 1. Single-Page Architecture (Current & Working)
 
-**Decision**: Move from working single-page to multi-page architecture
+**Decision**: Maintain proven single-page architecture with iframe tool integration
 **Rationale**:
-- **Performance**: Individual pages load faster, better caching
-- **SEO**: Each slide has unique URL for bookmarking/sharing
-- **Tool Integration**: Direct component embedding vs iframe limitations
-- **Scalability**: Better handling of large presentation content
-- **User Experience**: More flexible navigation and interaction
+- **Functionality**: Working 29-slide presentation with smooth navigation
+- **Performance**: Single load with fast transitions (< 3 seconds total)
+- **Simplicity**: No complex cross-page state management
+- **Compatibility**: Works across all browsers and devices
+- **User Experience**: Seamless experience without page reloads
 
-**Implementation Strategy**:
+**Current Implementation**:
 ```javascript
-// Current: Single-page navigation
+// Working single-page navigation
 function nextSlide() {
-    currentSlideIndex++;
-    updateSlideDisplay();
+    if (currentSlideIndex < 29) {  // Updated for 29 slides
+        currentSlideIndex++;
+        updateSlideDisplay();
+        updateProgressBar();
+    }
 }
 
-// Target: Multi-page navigation
-function nextSlide() {
-    const nextSlideNumber = currentSlideIndex + 1;
-    if (nextSlideNumber <= totalSlides) {
-        window.location.href = `../${nextSlideNumber}/index.html`;
-    }
+// Iframe-based tool integration
+function loadToolDemo(slideNumber) {
+    const toolMap = {
+        5: 'wire-mark-calculator',
+        7: 'wire-stop-mark-calculator',
+        9: 'reel-size-estimator',
+        11: 'cutting-records',
+        // Additional tools in other slides
+    };
+    // Load iframe with tool
 }
 ```
 
@@ -185,7 +192,7 @@ class ToolDemo {
 // Centralized navigation management
 const NavigationManager = {
     currentSlide: 1,
-    totalSlides: 19,
+    totalSlides: 29,  // Updated for complete presentation
 
     navigateTo(slideNumber) {
         if (this.isValidSlide(slideNumber)) {
@@ -323,7 +330,7 @@ function loadToolDemo(toolName) {
 ### Navigation Error Handling
 ```javascript
 function navigateToSlide(slideNumber) {
-    if (slideNumber < 1 || slideNumber > 19) {
+    if (slideNumber < 1 || slideNumber > 29) {  // Updated for complete presentation
         showNavigationError('Invalid slide number');
         return;
     }
@@ -398,7 +405,7 @@ frame-src 'none'  // Prevent iframe embedding
 ```javascript
 function validateSlideNumber(input) {
     const num = parseInt(input);
-    return Number.isInteger(num) && num >= 1 && num <= 19;
+    return Number.isInteger(num) && num >= 1 && num <= 29;  // Updated for complete presentation
 }
 ```
 
@@ -406,7 +413,7 @@ function validateSlideNumber(input) {
 ```javascript
 function createSlideUrl(slideNumber) {
     // Prevent directory traversal
-    const safeNumber = Math.max(1, Math.min(19, parseInt(slideNumber)));
+    const safeNumber = Math.max(1, Math.min(29, parseInt(slideNumber)));  // Updated for complete presentation
     return `../${safeNumber}/index.html`;
 }
 ```

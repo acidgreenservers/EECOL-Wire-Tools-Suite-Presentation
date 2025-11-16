@@ -507,14 +507,10 @@
             display: flex;
             align-items: center;
             margin-bottom: 1.5rem;
-            opacity: 0;
-            transform: translateX(-20px);
-            animation: slideInRight 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            opacity: 1;
+            transform: translateX(0);
+            animation: none;
         }
-
-        .chart-item:nth-child(1) { animation-delay: 0.2s; }
-        .chart-item:nth-child(2) { animation-delay: 0.4s; }
-        .chart-item:nth-child(3) { animation-delay: 0.6s; }
 
         .chart-label {
             width: 200px;
@@ -526,20 +522,21 @@
 
         .chart-bar-container {
             flex: 1;
-            height: 40px;
+            height: 48px;
             background: var(--surface-variant);
-            border-radius: 20px;
+            border-radius: 24px;
             overflow: hidden;
             position: relative;
             box-shadow: var(--elevation-1) inset;
+            border: 2px solid var(--outline-variant);
         }
 
         .chart-bar {
             height: 100%;
             background: linear-gradient(90deg, var(--theme-primary), var(--theme-accent));
-            border-radius: 20px;
+            border-radius: 24px;
             width: 0%;
-            transition: width 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            transition: width 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             position: relative;
             box-shadow: var(--elevation-2);
         }
@@ -550,27 +547,42 @@
             top: 0;
             right: 0;
             bottom: 0;
-            width: 4px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 0 20px 20px 0;
+            width: 6px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 0 24px 24px 0;
         }
 
         .chart-value {
             position: absolute;
-            right: -60px;
+            right: -70px;
             top: 50%;
             transform: translateY(-50%);
             font-size: 1.1rem;
             font-weight: 700;
             color: var(--theme-primary);
-            opacity: 0;
-            animation: fadeInValue 0.5s ease forwards;
-            animation-delay: 2.2s;
+            background: var(--surface);
+            padding: 4px 8px;
+            border-radius: 12px;
+            border: 1px solid var(--outline-variant);
+            box-shadow: var(--elevation-1);
         }
 
-        /* Animate bars when slide becomes active */
-        .slide.active .slide[data-slide="10"] .chart-bar {
+        /* Animate bars when they become visible */
+        .slide.active[data-slide="10"] .chart-bar {
             width: var(--target-width);
+        }
+
+        /* Progressive animation delays for bars */
+        .slide.active[data-slide="10"] .chart-item:nth-child(1) .chart-bar {
+            transition-delay: 0.3s;
+        }
+
+        .slide.active[data-slide="10"] .chart-item:nth-child(2) .chart-bar {
+            transition-delay: 0.5s;
+        }
+
+        .slide.active[data-slide="10"] .chart-item:nth-child(3) .chart-bar {
+            transition-delay: 0.7s;
         }
 
         @keyframes slideInRight {
@@ -1020,8 +1032,8 @@
                         <p class="text-sm text-gray-700">Usage patterns, efficiency metrics, and reporting</p>
                     </div>
                     <div class="feature-card">
-                        <h4 class="font-bold">🔄 P2P Synchronization</h4>
-                        <p class="text-sm text-gray-700">Real-time data sharing across workstations</p>
+                        <h4 class="font-bold">📊 Cutting Records</h4>
+                        <p class="text-sm text-gray-700">Complete audit trail of every wire cut with operator details</p>
                     </div>
                 </div>
 
@@ -1279,13 +1291,13 @@
                     <p class="text-2xl text-gray-700 mb-8">Let's discuss implementation next steps</p>
 
                     <div class="solution-box text-left max-w-3xl mx-auto">
-                        <h3>📋 What Happens Next</h3>
+                        <h3>📋 Implementation Roadmap</h3>
                         <ul class="bullet-list">
-                            <li>Schedule a hands-on demo session with your team</li>
-                            <li>Identify pilot workstation and key users</li>
-                            <li>Discuss customization requirements</li>
-                            <li>Plan deployment timeline</li>
-                            <li>Set success metrics and KPIs</li>
+                            <li>Complete system validation and production readiness assessment for offline deployment</li>
+                            <li>Evaluate enterprise database integration options and migration strategies</li>
+                            <li>Address organizational workflow integration and system customization needs</li>
+                            <li>Develop product roadmap for feature enhancements and system maintenance</li>
+                            <li>Establish performance metrics and key performance indicators for success measurement</li>
                         </ul>
                     </div>
 

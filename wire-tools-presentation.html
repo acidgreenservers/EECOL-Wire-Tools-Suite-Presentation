@@ -493,6 +493,102 @@
             letter-spacing: normal;
         }
 
+        /* Chart Styles for ROI Visualization */
+        .chart-container {
+            margin: 2rem 0;
+            background: var(--surface);
+            border-radius: 16px;
+            border: 1px solid var(--outline-variant);
+            padding: 2rem;
+            box-shadow: var(--elevation-2);
+        }
+
+        .chart-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateX(-20px);
+            animation: slideInRight 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+        }
+
+        .chart-item:nth-child(1) { animation-delay: 0.2s; }
+        .chart-item:nth-child(2) { animation-delay: 0.4s; }
+        .chart-item:nth-child(3) { animation-delay: 0.6s; }
+
+        .chart-label {
+            width: 200px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--on-surface);
+            margin-right: 1rem;
+        }
+
+        .chart-bar-container {
+            flex: 1;
+            height: 40px;
+            background: var(--surface-variant);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: var(--elevation-1) inset;
+        }
+
+        .chart-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--theme-primary), var(--theme-accent));
+            border-radius: 20px;
+            width: 0%;
+            transition: width 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            box-shadow: var(--elevation-2);
+        }
+
+        .chart-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 0 20px 20px 0;
+        }
+
+        .chart-value {
+            position: absolute;
+            right: -60px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--theme-primary);
+            opacity: 0;
+            animation: fadeInValue 0.5s ease forwards;
+            animation-delay: 2.2s;
+        }
+
+        /* Animate bars when slide becomes active */
+        .slide.active .slide[data-slide="10"] .chart-bar {
+            width: var(--target-width);
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInValue {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
         .bullet-list {
             list-style: none;
             padding: 0;
@@ -769,12 +865,12 @@
                 <div class="problem-box">
                     <h3>❌ Current Pain Points</h3>
                     <ul class="bullet-list">
-                        <li>doesnt have in-built cutting history, manual operator memory reliance is faulty.</li>
-                        <li>doesnt allow attaching cutter names to cuts, trailing off no history.</li>
-                        <li>cutting records allows much more data to attach to records.</li>
-                        <li>records go to reports page for weekly/monthly output data.</li>
-                        <li>allows better operator accountability for keeping track of records.</li>
-                        <li>has mobile capabilities for logging cuts, ie can be kiosk for sales who cut and run back to counter.</li>
+                        <li>Doesn't have built-in cutting history - operators rely on faulty memory</li>
+                        <li>Doesn't allow attaching cutter names to cuts - no accountability trail</li>
+                        <li>Limited data capture capabilities</li>
+                        <li>No integrated reporting for weekly/monthly output</li>
+                        <li>Poor operator accountability tracking</li>
+                        <li>Lacks mobile capabilities for on-the-go logging</li>
                     </ul>
                 </div>
 
@@ -852,48 +948,50 @@
             </div>
         </div>
 
-        <!-- Slide 4: Wire Mark Calculator Info -->
+        <!-- Slide 4: Interactive Demo Introduction -->
         <div class="slide" data-slide="4">
             <div class="slide-content">
-                <h2>Tool #1: Wire Mark Calculator</h2>
-                <p class="text-lg text-gray-700 mb-6">Calculate the exact length between wire start and end marks with support for both metric and imperial units.</p>
+                <h2>Interactive Live Demo</h2>
+                <p class="text-lg text-gray-700 mb-6">Experience the full power of EECOL Wire Tools Suite with our comprehensive demonstration system.</p>
 
                 <div class="feature-grid mb-6">
                     <div class="feature-card">
-                        <h4 class="font-bold">⚡ Instant Calculation</h4>
-                        <p class="text-sm text-gray-700">Real-time results as you type with immediate feedback</p>
+                        <h4 class="font-bold">🎯 Try Any Tool</h4>
+                        <p class="text-sm text-gray-700">Navigate through all 12+ specialized tools in real-time</p>
                     </div>
                     <div class="feature-card">
-                        <h4 class="font-bold">🌍 Dual Units</h4>
-                        <p class="text-sm text-gray-700">Seamlessly switch between meters and feet</p>
+                        <h4 class="font-bold">💾 Full Database</h4>
+                        <p class="text-sm text-gray-700">Create, store, and manage cutting records with persistent data</p>
                     </div>
                     <div class="feature-card">
-                        <h4 class="font-bold">📋 Quick Copy</h4>
-                        <p class="text-sm text-gray-700">Copy results directly to clipboard for easy transfer</p>
+                        <h4 class="font-bold">📱 PWA Features</h4>
+                        <p class="text-sm text-gray-700">Install on any device, works completely offline</p>
                     </div>
                 </div>
 
                 <div class="solution-box">
-                    <h3>🎯 Perfect For:</h3>
+                    <h3>🚀 What You Can Do:</h3>
                     <ul class="bullet-list">
-                        <li>Wire cutting operations requiring precise measurements</li>
-                        <li>Converting between metric and imperial measurements</li>
-                        <li>Quick calculations during production runs</li>
-                        <li>Ensuring accuracy in mark-to-mark cutting</li>
+                        <li>Add wire cut records with full operator details and timestamps</li>
+                        <li>Generate PDF reports and export cutting data</li>
+                        <li>Track inventory levels with comprehensive logging</li>
+                        <li>Use all calculators, planners, and management tools</li>
+                        <li>Save and retrieve all data across browser sessions</li>
+                        <li>Experience the complete offline-first workflow</li>
                     </ul>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 5: Wire Mark Calculator Demo -->
+        <!-- Slide 5: Cutting Records Demo -->
         <div class="slide" data-slide="5">
             <div class="slide-content">
-                <h2>Wire Mark Calculator - Live Demo</h2>
-                <p class="text-lg text-gray-700 mb-6">Try the calculator yourself - enter your measurements and see the results instantly.</p>
+                <h2>Cutting Records - Live Demo</h2>
+                <p class="text-lg text-gray-700 mb-6">Experience the core cutting records system - add cuts, track operators, and manage your wire cutting operations.</p>
 
                 <div class="demo-container">
-                    <div class="demo-header">🎯 Interactive Demo - Calculate Wire Lengths</div>
-                    <iframe src="src/pages/wire-mark-calculator/wire-mark-calculator.html" class="demo-iframe" scrolling="yes"></iframe>
+                    <div class="demo-header">📊 Interactive Demo - Cutting Records Management</div>
+                    <iframe src="src/pages/cutting-records/cutting-records.html" class="demo-iframe" scrolling="yes"></iframe>
                 </div>
             </div>
         </div>
@@ -996,9 +1094,9 @@
                         <p class="text-gray-700">Local-first data storage with unlimited capacity</p>
                     </div>
                     <div class="feature-card">
-                        <div class="feature-icon">🔄</div>
-                        <h4 class="font-bold text-lg mb-2">GunDB P2P</h4>
-                        <p class="text-gray-700">Real-time distributed sync without central server</p>
+                        <div class="feature-icon">⚙️</div>
+                        <h4 class="font-bold text-lg mb-2">Database Config</h4>
+                        <p class="text-gray-700">Comprehensive configuration for data retention, backup, and maintenance</p>
                     </div>
                     <div class="feature-card">
                         <div class="feature-icon">📱</div>
@@ -1018,7 +1116,7 @@
                     <div class="feature-card">
                         <div class="feature-icon">🔒</div>
                         <h4 class="font-bold text-lg mb-2">Security</h4>
-                        <p class="text-gray-700">Content Security Policy, encrypted sync optional</p>
+                        <p class="text-gray-700">Offline data protection with Content Security Policy</p>
                     </div>
                 </div>
 
@@ -1111,18 +1209,29 @@
             <div class="slide-content">
                 <h2>Expected Benefits & ROI</h2>
 
-                <div class="stats-grid mb-6">
-                    <div class="stat-card">
-                        <div class="stat-number">-70%</div>
-                        <div class="stat-label">Calculation Time</div>
+                <div class="chart-container mb-6">
+                    <div class="chart-item">
+                        <div class="chart-label">Calculation Time</div>
+                        <div class="chart-bar-container">
+                            <div class="chart-bar" style="--target-width: 70%;"></div>
+                            <div class="chart-value">-70%</div>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-number">-50%</div>
-                        <div class="stat-label">Data Entry Errors</div>
+
+                    <div class="chart-item">
+                        <div class="chart-label">Data Entry Errors</div>
+                        <div class="chart-bar-container">
+                            <div class="chart-bar" style="--target-width: 50%;"></div>
+                            <div class="chart-value">-50%</div>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-number">+100%</div>
-                        <div class="stat-label">Operational Visibility</div>
+
+                    <div class="chart-item">
+                        <div class="chart-label">Operational Visibility</div>
+                        <div class="chart-bar-container">
+                            <div class="chart-bar" style="--target-width: 100%;"></div>
+                            <div class="chart-value">+100%</div>
+                        </div>
                     </div>
                 </div>
 
@@ -1155,57 +1264,8 @@
             </div>
         </div>
 
-        <!-- Slide 11: Implementation Roadmap -->
+        <!-- Slide 11: Next Steps / Call to Action -->
         <div class="slide" data-slide="11">
-            <div class="slide-content">
-                <h2>Implementation Roadmap</h2>
-
-                <div class="space-y-6 mt-8">
-                    <div class="feature-card">
-                        <h3 class="text-xl font-bold mb-3">Phase 1: Pilot Deployment (Week 1-2)</h3>
-                        <ul class="bullet-list">
-                            <li>Deploy to single workstation for testing</li>
-                            <li>Train 2-3 key users on core tools</li>
-                            <li>Gather feedback and refine workflows</li>
-                            <li>Validate data accuracy against AS400</li>
-                        </ul>
-                    </div>
-
-                    <div class="feature-card">
-                        <h3 class="text-xl font-bold mb-3">Phase 2: Team Rollout (Week 3-4)</h3>
-                        <ul class="bullet-list">
-                            <li>Install PWA on all workstations and mobile devices</li>
-                            <li>Comprehensive training for all wire cutting staff</li>
-                            <li>Set up P2P sync relay if needed</li>
-                            <li>Establish data backup procedures</li>
-                        </ul>
-                    </div>
-
-                    <div class="feature-card">
-                        <h3 class="text-xl font-bold mb-3">Phase 3: Optimization (Week 5-8)</h3>
-                        <ul class="bullet-list">
-                            <li>Analyze usage data and identify bottlenecks</li>
-                            <li>Implement custom features based on feedback</li>
-                            <li>Integrate with existing reporting systems</li>
-                            <li>Establish KPIs and monitoring</li>
-                        </ul>
-                    </div>
-
-                    <div class="feature-card">
-                        <h3 class="text-xl font-bold mb-3">Phase 4: Expansion (Month 3+)</h3>
-                        <ul class="bullet-list">
-                            <li>Roll out to additional departments or locations</li>
-                            <li>Develop custom integrations if needed</li>
-                            <li>Continuous improvement based on usage analytics</li>
-                            <li>Explore automation opportunities</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 12: Next Steps / Call to Action -->
-        <div class="slide" data-slide="12">
             <div class="slide-content">
                 <div class="text-center">
                     <svg width="80" height="80" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="eecol-logo mx-auto">
@@ -1266,7 +1326,7 @@
 
     <!-- Slide Counter -->
     <div class="slide-counter">
-        <span id="currentSlide">1</span> / <span id="totalSlides">12</span>
+        <span id="currentSlide">1</span> / <span id="totalSlides">11</span>
     </div>
 
 

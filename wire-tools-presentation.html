@@ -254,6 +254,74 @@
             right: 2rem;
         }
 
+        /* New arrow navigation buttons - more prominent */
+        .arrow-button {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 99; /* Slightly below the original buttons */
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            background: var(--primary);
+            color: var(--on-primary);
+            border: none;
+            padding: 16px 20px;
+            font-size: 32px;
+            font-weight: bold;
+            border-radius: 12px;
+            box-shadow: var(--elevation-3);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 80px;
+            min-height: 80px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .arrow-button:hover {
+            box-shadow: var(--elevation-5);
+            transform: translateY(-50%) scale(1.05);
+            background: linear-gradient(135deg, var(--primary), var(--theme-accent));
+        }
+
+        .arrow-button:active {
+            transform: translateY(-50%) scale(0.95);
+            transition: all 0.1s;
+        }
+
+        .arrow-button.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .arrow-prev {
+            left: 1rem;
+        }
+
+        .arrow-next {
+            right: 1rem;
+        }
+
+        /* Mobile adjustments for arrow buttons */
+        @media (max-width: 768px) {
+            .arrow-button {
+                padding: 14px 16px;
+                font-size: 28px;
+                min-width: 70px;
+                min-height: 70px;
+            }
+
+            .arrow-prev {
+                left: 0.5rem;
+            }
+
+            .arrow-next {
+                right: 0.5rem;
+            }
+        }
+
         .progress-bar {
             position: fixed;
             top: 0;
@@ -1630,6 +1698,14 @@
         <span style="font-size: 24px; line-height: 1;">→</span>
     </button>
 
+    <!-- Prominent Arrow Navigation -->
+    <button class="arrow-button arrow-prev" id="arrowPrevBtn" onclick="previousSlide()">
+        ❮
+    </button>
+    <button class="arrow-button arrow-next" id="arrowNextBtn" onclick="nextSlide()">
+        ❯
+    </button>
+
     <!-- Slide Counter -->
     <div class="slide-counter">
         <span id="currentSlide">1</span> / <span id="totalSlides">29</span>
@@ -1676,6 +1752,8 @@
             // Update navigation buttons
             document.getElementById('prevBtn').classList.toggle('disabled', currentSlideIndex === 1);
             document.getElementById('nextBtn').classList.toggle('disabled', currentSlideIndex === totalSlides);
+            document.getElementById('arrowPrevBtn').classList.toggle('disabled', currentSlideIndex === 1);
+            document.getElementById('arrowNextBtn').classList.toggle('disabled', currentSlideIndex === totalSlides);
 
             // Reload iframe on slide with demo to ensure it's fresh
             const iframe = currentSlide.querySelector('.demo-iframe');

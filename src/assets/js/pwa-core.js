@@ -27,12 +27,7 @@ function registerPWA() {
                         }
                     });
 
-                    // Request notification permission
-                    if ('Notification' in window && Notification.permission === 'default') {
-                        Notification.requestPermission().then(permission => {
-                            console.log('🔔 EECOL PWA: Notification permission:', permission);
-                        });
-                    }
+
                 })
                 .catch(error => {
                     console.error('❌ EECOL PWA: Service Worker registration failed:', error);

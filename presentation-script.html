@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -111,8 +112,13 @@
         }
 
         @media print {
-            body { background: white; }
-            .slide-content { break-inside: avoid; }
+            body {
+                background: white;
+            }
+
+            .slide-content {
+                break-inside: avoid;
+            }
         }
 
         @media (max-width: 768px) {
@@ -131,15 +137,17 @@
         }
     </style>
 </head>
+
 <body>
     <div class="script-container">
         <div class="logo">
             <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <circle cx="12" cy="12" r="11.35" fill="white" stroke="#0058B3" stroke-width="2"/>
-                <rect x="4" y="4" width="4" height="16" rx="1" fill="#0058B3"/>
-                <path d="M 8,6.5 C 12,5.5 16,7.5 20,6.5" stroke="#0058B3" stroke-width="3.5" stroke-linecap="round"/>
-                <path d="M 8,12 C 12,11 16,13 20,12" stroke="#0058B3" stroke-width="3.5" stroke-linecap="round"/>
-                <path d="M 8,17.5 C 12,16.5 16,18.5 20,17.5" stroke="#0058B3" stroke-width="3.5" stroke-linecap="round"/>
+                <circle cx="12" cy="12" r="11.35" fill="white" stroke="#0058B3" stroke-width="2" />
+                <rect x="4" y="4" width="4" height="16" rx="1" fill="#0058B3" />
+                <path d="M 8,6.5 C 12,5.5 16,7.5 20,6.5" stroke="#0058B3" stroke-width="3.5" stroke-linecap="round" />
+                <path d="M 8,12 C 12,11 16,13 20,12" stroke="#0058B3" stroke-width="3.5" stroke-linecap="round" />
+                <path d="M 8,17.5 C 12,16.5 16,18.5 20,17.5" stroke="#0058B3" stroke-width="3.5"
+                    stroke-linecap="round" />
             </svg>
             <h1 style="color: #0058B3; margin-top: 1rem;">EECOL Wire Tools Suite</h1>
             <h2 style="color: #6b7280; font-weight: 400;">Presentation Script</h2>
@@ -147,27 +155,43 @@
 
         <!-- SLIDE 1 -->
         <div class="slide-header">
-            SLIDE 1: Title & Introduction
+            SLIDE 1: Start Presentation (Waiting Room)
         </div>
         <div class="slide-content">
             <div class="slide-number">SLIDE 1</div>
-            <div class="slide-title">Title & Introduction</div>
-            <p><em>(Pause for audience to read title)</em></p>
-            <p>"Good [morning/afternoon], welcome to the EECOL Wire Tools Suite presentation. Today I'm excited to show you how we're transforming wire cutting operations through digital innovation."</p>
-            <p><em>(Point to stats grid)</em></p>
-            <p>"This comprehensive suite includes 12+ specialized tools, all working 100% offline with zero installation required. It's designed specifically for EECOL operations to ensure operator reliability and accountability."</p>
-            <p><em>(Pause to let key benefits resonate)</em></p>
-            <p>"Let's dive into the current challenges and how we're solving them."</p>
+            <div class="slide-title">Start Presentation</div>
+            <p><em>(This slide is displayed while audience is gathering)</em></p>
+            <p>"Welcome everyone. We'll get started in just a moment."</p>
+            <p><em>(When ready to begin, click 'Start Presentation')</em></p>
         </div>
 
         <!-- SLIDE 2 -->
         <div class="slide-header">
-            SLIDE 2: The Challenge - AS400 System Limitations
+            SLIDE 2: Title & Introduction
         </div>
         <div class="slide-content">
             <div class="slide-number">SLIDE 2</div>
+            <div class="slide-title">Title & Introduction</div>
+            <p><em>(Pause for audience to read title)</em></p>
+            <p>"Good [morning/afternoon], welcome to the EECOL Wire Tools Suite presentation. Today I'm excited to show
+                you how we're transforming wire cutting operations through digital innovation."</p>
+            <p><em>(Point to stats grid)</em></p>
+            <p>"This comprehensive suite includes 12+ specialized tools, all working 100% offline with zero installation
+                required. It's designed specifically for EECOL operations to ensure operator reliability and
+                accountability."</p>
+            <p><em>(Pause to let key benefits resonate)</em></p>
+            <p>"Let's dive into the current challenges and how we're solving them."</p>
+        </div>
+
+        <!-- SLIDE 3 -->
+        <div class="slide-header">
+            SLIDE 3: The Challenge - AS400 System Limitations
+        </div>
+        <div class="slide-content">
+            <div class="slide-number">SLIDE 3</div>
             <div class="slide-title">The Challenge - AS400 System Limitations</div>
-            <p>"Currently, our wire cutting operations face several significant challenges with the existing AS400 system."</p>
+            <p>"Currently, our wire cutting operations face several significant challenges with the existing AS400
+                system."</p>
             <p><em>(Read pain points from problem box)</em></p>
             <div class="emphasis">
                 <div class="bullet-point">• Operators rely on faulty memory for cutting history</div>
@@ -178,43 +202,29 @@
                 <div class="bullet-point">• Lacks mobile capabilities for on-the-go logging</div>
             </div>
             <p><em>(Transition to business impact)</em></p>
-            <p>"This results in three major business impacts: lost productivity from manual calculations, material waste from calculation errors, and no analytics for process optimization."</p>
-        </div>
-
-        <!-- SLIDE 3 -->
-        <div class="slide-header">
-            SLIDE 3: The Solution Overview
-        </div>
-        <div class="slide-content">
-            <div class="slide-number">SLIDE 3</div>
-            <div class="slide-title">The Solution Overview</div>
-            <p>"The EECOL Wire Tools Suite provides a comprehensive digital-first approach to modernize every aspect of wire cutting operations."</p>
-            <p><em>(Highlight each feature card)</em></p>
-            <p>"We're introducing smart calculators for precise wire mark calculations, comprehensive records for tracking every cut, advanced planning tools for multi-cut optimization, and local-only database storage with full privacy controls."</p>
-            <p><em>(Point to PWA and privacy features)</em></p>
-            <p>"The suite works as a progressive web app that can be installed on any device and works completely offline, with all data staying local and secure."</p>
+            <p>"This results in three major business impacts: lost productivity from manual calculations, material waste
+                from calculation errors, and no analytics for process optimization."</p>
         </div>
 
         <!-- SLIDE 4 -->
         <div class="slide-header">
-            SLIDE 4: Interactive Demo Introduction
+            SLIDE 4: The Solution Overview
         </div>
         <div class="slide-content">
             <div class="slide-number">SLIDE 4</div>
-            <div class="slide-title">Interactive Demo Introduction</div>
-            <p>"Now for the exciting part - you can try the full EECOL Wire Tools Suite right here in this presentation."</p>
-            <p><em>(Point to demo capabilities)</em></p>
-            <p>"This live demonstration lets you navigate through all 12+ specialized tools in real-time. You'll experience the full database functionality where you can create, store, and manage cutting records with persistent data."</p>
-            <p><em>(Read the 'What You Can Do' list)</em></p>
-            <div class="emphasis">
-                <div class="bullet-point">• Add wire cut records with full operator details and timestamps</div>
-                <div class="bullet-point">• Generate PDF reports and export cutting data</div>
-                <div class="bullet-point">• Track inventory levels with comprehensive logging</div>
-                <div class="bullet-point">• Use all calculators, planners, and management tools</div>
-                <div class="bullet-point">• Save and retrieve all data across browser sessions</div>
-                <div class="bullet-point">• Experience the complete offline-first workflow</div>
-            </div>
+            <div class="slide-title">The Solution Overview</div>
+            <p>"The EECOL Wire Tools Suite provides a comprehensive digital-first approach to modernize every aspect of
+                wire cutting operations."</p>
+            <p><em>(Highlight each feature card)</em></p>
+            <p>"We're introducing smart calculators for precise wire mark calculations, comprehensive records for
+                tracking every cut, advanced planning tools for multi-cut optimization, and local-only database storage
+                with full privacy controls."</p>
+            <p><em>(Point to PWA and privacy features)</em></p>
+            <p>"The suite works as a progressive web app that can be installed on any device and works completely
+                offline, with all data staying local and secure."</p>
         </div>
+
+
 
         <!-- SLIDE 5 -->
         <div class="slide-header">
@@ -224,9 +234,12 @@
             <div class="slide-number">SLIDE 5</div>
             <div class="slide-title">Cutting Records Demo</div>
             <p><em>(Navigate to this slide - iframe should load automatically)</em></p>
-            <p>"Here's the core of our system - the cutting records management tool. This is loading live in the iframe below."</p>
+            <p>"Here's the core of our system - the cutting records management tool. This is loading live in the iframe
+                below."</p>
             <p><em>(Wait for iframe to load, then point to it)</em></p>
-            <p>"As you can see, this provides a complete interface for logging wire cuts with full operator details, timestamps, and comprehensive tracking capabilities. You can add cuts, track operators, and manage wire cutting operations in real-time."</p>
+            <p>"As you can see, this provides a complete interface for logging wire cuts with full operator details,
+                timestamps, and comprehensive tracking capabilities. You can add cuts, track operators, and manage wire
+                cutting operations in real-time."</p>
         </div>
 
         <!-- SLIDE 6 -->
@@ -236,72 +249,27 @@
         <div class="slide-content">
             <div class="slide-number">SLIDE 6</div>
             <div class="slide-title">Data Management & Analytics</div>
-            <p>"Beyond just recording cuts, our suite provides comprehensive data management and analytics capabilities."</p>
+            <p>"Beyond just recording cuts, our suite provides comprehensive data management and analytics
+                capabilities."</p>
             <p><em>(Highlight the three main areas)</em></p>
-            <p>"We offer real-time inventory tracking, advanced analytics for usage patterns and efficiency metrics, and complete audit trails of every wire cut with operator details."</p>
+            <p>"We offer real-time inventory tracking, advanced analytics for usage patterns and efficiency metrics, and
+                complete audit trails of every wire cut with operator details."</p>
             <p><em>(Read operational intelligence points)</em></p>
-            <p>"This gives you historical data analysis for process optimization, automated reporting and KPI tracking, predictive analytics for inventory planning, and real-time dashboards for operational visibility - transforming data into actionable business intelligence."</p>
+            <p>"This gives you historical data analysis for process optimization, automated reporting and KPI tracking,
+                predictive analytics for inventory planning, and real-time dashboards for operational visibility -
+                transforming data into actionable business intelligence."</p>
         </div>
+
+
+
+
 
         <!-- SLIDE 7 -->
         <div class="slide-header">
-            SLIDE 7: Specialized Operations Tools
+            SLIDE 7: Expected Benefits & ROI
         </div>
         <div class="slide-content">
             <div class="slide-number">SLIDE 7</div>
-            <div class="slide-title">Specialized Operations Tools</div>
-            <p>"The suite also includes specialized tools for operational excellence in shipping, labeling, and maintenance."</p>
-            <p><em>(Point to each tool)</em></p>
-            <p>"We provide shipping manifests for professional shipping labels, reel labels for large-format identification, and maintenance trackers for daily equipment inspection checklists."</p>
-            <p><em>(Read operational excellence benefits)</em></p>
-            <p>"This ensures standardized shipping and labeling procedures, preventive maintenance scheduling and tracking, quality control documentation, and integrated workflow management - everything needed for professional wire operations."</p>
-        </div>
-
-        <!-- SLIDE 8 -->
-        <div class="slide-header">
-            SLIDE 8: Architecture & Technology Stack
-        </div>
-        <div class="slide-content">
-            <div class="slide-number">SLIDE 8</div>
-            <div class="slide-title">Architecture & Technology Stack</div>
-            <p>"From a technical perspective, the EECOL Wire Tools Suite is built on modern, enterprise-ready architecture."</p>
-            <p><em>(Highlight key technologies)</em></p>
-            <p>"We're using IndexedDB for unlimited local data storage, comprehensive database configuration, progressive web app standards, Tailwind CSS for responsive design, and zero-build pure web standards deployment."</p>
-            <p><em>(Read deployment options)</em></p>
-            <p>"The system can be deployed on static file hosting with no server requirements, works on any modern browser, can be used on internal networks without internet access, offers optional cloud relay for remote sync, and is fully GDPR compliant with data staying on-premises."</p>
-        </div>
-
-        <!-- SLIDE 9 -->
-        <div class="slide-header">
-            SLIDE 9: Complete Tool Suite
-        </div>
-        <div class="slide-content">
-            <div class="slide-number">SLIDE 9</div>
-            <div class="slide-title">Complete Tool Suite</div>
-            <p>"Altogether, we provide 12+ specialized tools covering every aspect of wire operations."</p>
-            <p><em>(Read through the tool grid - pause briefly on each)</em></p>
-            <div class="emphasis">
-                <div class="bullet-point">• Wire Mark Calculator for precise length calculations</div>
-                <div class="bullet-point">• Stop Mark Calculator for exact stopping points</div>
-                <div class="bullet-point">• Reel Capacity Estimator for maximum capacity calculations</div>
-                <div class="bullet-point">• Reel Size Estimator for optimal reel selection</div>
-                <div class="bullet-point">• Weight Calculator for wire weight estimates</div>
-                <div class="bullet-point">• Multi-Cut Planner for optimizing large reel portioning</div>
-                <div class="bullet-point">• Wire Cut Records for logging and analyzing operations</div>
-                <div class="bullet-point">• Inventory Records for real-time tracking</div>
-                <div class="bullet-point">• Shipping Manifest for professional labels</div>
-                <div class="bullet-point">• Reel Labels for large-format printing</div>
-                <div class="bullet-point">• Machine Maintenance for equipment checklists</div>
-                <div class="bullet-point">• Education Center for training and best practices</div>
-            </div>
-        </div>
-
-        <!-- SLIDE 10 -->
-        <div class="slide-header">
-            SLIDE 10: Expected Benefits & ROI
-        </div>
-        <div class="slide-content">
-            <div class="slide-number">SLIDE 10</div>
             <div class="slide-title">Expected Benefits & ROI</div>
             <p>"The expected benefits from implementing EECOL Wire Tools Suite are significant and measurable."</p>
             <p><em>(Wait for chart animations if they trigger)</em></p>
@@ -311,21 +279,26 @@
                 <div class="bullet-point">• 100% increase in operational visibility</div>
             </div>
             <p><em>(Read key advantages)</em></p>
-            <p>"Workers will spend more time cutting instead of calculating, eliminate manual calculation errors, have real-time inventory visibility, access historical data for optimization, gain mobile accessibility, and follow standardized cutting protocols."</p>
+            <p>"Workers will spend more time cutting instead of calculating, eliminate manual calculation errors, have
+                real-time inventory visibility, access historical data for optimization, gain mobile accessibility, and
+                follow standardized cutting protocols."</p>
         </div>
 
-        <!-- SLIDE 11 -->
+        <!-- SLIDE 8 -->
         <div class="slide-header">
-            SLIDE 11: Next Steps & Call to Action
+            SLIDE 8: Next Steps & Call to Action
         </div>
         <div class="slide-content">
-            <div class="slide-number">SLIDE 11</div>
+            <div class="slide-number">SLIDE 8</div>
             <div class="slide-title">Next Steps & Call to Action</div>
             <p>"So where do we go from here?"</p>
             <p><em>(Read implementation roadmap)</em></p>
-            <p>"The implementation roadmap includes system validation and production readiness assessment, enterprise database integration evaluation, organizational workflow integration, product roadmap development, and performance metrics establishment."</p>
+            <p>"The implementation roadmap includes system validation and production readiness assessment, enterprise
+                database integration evaluation, organizational workflow integration, product roadmap development, and
+                performance metrics establishment."</p>
             <p><em>(Point to call-to-action button)</em></p>
-            <p>"You can explore the full tool suite right now at the link shown, or we can discuss specific implementation details for your operations."</p>
+            <p>"You can explore the full tool suite right now at the link shown, or we can discuss specific
+                implementation details for your operations."</p>
             <p><em>(End with contact information)</em></p>
             <p>"Feel free to reach out to Lucas, our developer, for any questions. Thank you for your time today!"</p>
         </div>
@@ -343,11 +316,12 @@
             </div>
 
             <div class="tip-item">
-                <strong>Demo Focus:</strong> Spend extra time on Slide 5 if the iframe loads successfully - let audience interact
+                <strong>Demo Focus:</strong> Spend extra time on Slide 5 if the iframe loads successfully - let audience
+                interact
             </div>
 
             <div class="tip-item">
-                <strong>Questions:</strong> Pause at logical breaks (end of slides 2, 3, 6, 8) for audience questions
+                <strong>Questions:</strong> Pause at logical breaks (end of slides 3, 4, 6, 7) for audience questions
             </div>
 
             <div class="tip-item">
@@ -369,4 +343,5 @@
 
     </div>
 </body>
+
 </html>
